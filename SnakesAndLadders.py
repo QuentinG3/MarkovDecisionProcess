@@ -21,8 +21,48 @@ class SnakesAndLadders:
         self.applyTrapVectorToMatrix(trapVector)
 
         #self.costVector = [100,90,80,70,60,50,40,30,20,10,0,40,30,20,10]
-        self.costVector = [10,9,8,7,6,5,4,3,2,1,0,4,3,2,1]
+        #self.costVector = [10,9,8,7,6,5,4,3,2,1,0,4,3,2,1]
         self.costVector = [1,1,1,1,1,1,1,1,1,1,0,1,1,1,1]
+        #self.costVector = self.buildCostVector(trapVector)
+
+
+    def ValueIteration(self):
+        utilityVector = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+        policyVector = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+        for iteration in range(0,100):
+            #print("Iteration : "+str(iteration))
+            #print("policyVector : " + str(policyVector))
+            #print("utilityVector : " + str(utilityVector))
+            for item in range(0,len(utilityVector)):
+                #print("Item = " + str(item))
+                valueWithZero = self.costVector[item]
+                for item2 in range(0,len(utilityVector)):
+                    #print(self.SecurityMatrix[item][item2]*utilityVector[item2])
+                    valueWithZero += self.SecurityMatrix[item][item2]*utilityVector[item2]
+                valueWithOne = self.costVector[item]
+                for item2 in range(0,len(utilityVector)):
+                    valueWithOne += self.RiskyMatrix[item][item2]*utilityVector[item2]
+                #print("valueWithZero = "+ str(valueWithZero))
+                #print("valueWithOne = "+ str(valueWithOne))
+                if valueWithZero < valueWithOne:
+                    utilityVector[item] = valueWithZero
+                else:
+                    utilityVector[item] = valueWithOne
+
+        for item in range(0,len(utilityVector)):
+            valueWithZero = 0
+            for item2 in range(0,len(utilityVector)):
+                valueWithZero += self.SecurityMatrix[item][item2]*(utilityVector[item2] + self.costVector[item])
+            valueWithOne = 0
+            for item2 in range(0,len(utilityVector)):
+                valueWithOne += self.RiskyMatrix[item][item2]*(utilityVector[item2] + self.costVector[item])
+
+            if valueWithOne < valueWithZero:
+                policyVector[item] = 1
+            else:
+                policyVector[item] = 0
+
+        return utilityVector,policyVector
 
     def policyIteration(self):
         policyVector = [0,1,0,1,0,1,0,1,0,1,0,1,0,1,0]
@@ -68,8 +108,9 @@ class SnakesAndLadders:
         costVector = [10,9,8,7,6,5,4,3,2,1,0,4,3,2,1]
         for trapVectorIndex in range(0,len(trapVector)):
             if trapVector[trapVectorIndex] == 1:
-                costVector[trapVectorIndex] = 2
-        print(costVector)
+                costVector[trapVectorIndex] += 0
+        print("Cost vector : " + str(costVector))
+        return costVector
 
 
 
@@ -77,9 +118,12 @@ class SnakesAndLadders:
 
         for trapVectorIndex in range(0,len(trapVector)):
             if trapVector[trapVectorIndex] == 1:
-                self.RiskyMatrix[trapVectorIndex][0] = 1
-                for x in range(1,len(self.RiskyMatrix[trapVectorIndex])):
-                    self.RiskyMatrix[trapVectorIndex][x] = 0
+                for x in range(0,len(trapVector)):
+                    if self.RiskyMatrix[x][trapVectorIndex] >0:
+                        temp =  self.RiskyMatrix[x][trapVectorIndex]
+                        self.RiskyMatrix[x][0] += temp
+                        self.RiskyMatrix[x][trapVectorIndex] = 0
+
 
 
     def simulateGame(self,strategy):
