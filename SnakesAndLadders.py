@@ -118,7 +118,7 @@ class SnakesAndLadders:
 
         for trapVectorIndex in range(0,len(trapVector)):
             if trapVector[trapVectorIndex] == 1:
-                for x in range(0,len(trapVector)):
+                for x in range(1,len(trapVector)):
                     if self.RiskyMatrix[x][trapVectorIndex] >0:
                         temp =  self.RiskyMatrix[x][trapVectorIndex]
                         self.RiskyMatrix[x][0] += temp
