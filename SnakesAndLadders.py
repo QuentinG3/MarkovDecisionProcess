@@ -19,6 +19,7 @@ class SnakesAndLadders:
             self.RiskyMatrix = matrixGenerator.defaultRiskyMatrixCircle
 
         self.applyTrapVectorToMatrix(trapVector)
+        #self.applyRetreatToMatrix(trapVector,gameMode)
 
         #self.costVector = [100,90,80,70,60,50,40,30,20,10,0,40,30,20,10]
         #self.costVector = [10,9,8,7,6,5,4,3,2,1,0,4,3,2,1]
@@ -116,15 +117,19 @@ class SnakesAndLadders:
 
     def applyTrapVectorToMatrix(self,trapVector):
 
-        for trapVectorIndex in range(0,len(trapVector)):
+        for trapVectorIndex in range(1,len(trapVector)):
             if trapVector[trapVectorIndex] == 1:
-                for x in range(1,len(trapVector)):
+                for x in range(0,len(trapVector)):
                     if self.RiskyMatrix[x][trapVectorIndex] >0:
                         temp =  self.RiskyMatrix[x][trapVectorIndex]
                         self.RiskyMatrix[x][0] += temp
                         self.RiskyMatrix[x][trapVectorIndex] = 0
-
-
+    '''
+    def applyRetreatToMatrix(self,trapVector,gameMode):
+        if gameMode == 0:
+            #Modification not circular
+            for trapVectorIndex in range():
+    '''
 
     def simulateGame(self,strategy):
         currentPosition = 0
